@@ -1,9 +1,9 @@
 {
-  "name": "task-service",
+  "name": "library-management",
   "version": "1.0.0",
-  "description": "This is a starter project for any application",
+  "description": "Library management",
   "main": "./src/app.ts",
-  "author": "Kazeem Oluwatobi Odutola",
+  "author": "Adetola Akere",
   "license": "MIT",
   "scripts": {
     "start": "node ./dist",
