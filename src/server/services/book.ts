@@ -30,9 +30,10 @@ class BookService {
     }
   }
 
-  async borrowBook (user: User, id: ID) {
+  async borrowBook (user: User, id: string) {
+    console.log('IDSSSS',id)
       //@ts-ignore
-    const borrowed = user.books_borrowed.find((book)=>book._id === id.id)
+    const borrowed = user.books_borrowed.find((book)=>book._id === id)
     if(borrowed){
       throw new ConstraintError('You cannot borrow more than a copy')
     }
@@ -41,19 +42,20 @@ class BookService {
     }
    
 //@ts-ignore
-    const isBook = await BookRepo.byID({_id: id.id})
+    const isBook = await BookRepo.byID({_id: id})
+    const allBorrowed = [...user.books_borrowed,isBook]
     
     if (isBook.copies >= 1) {
       //@ts-ignore
       if (isBook) {
         await UserRepo.atomicUpdate(user.id, {
           $set: {
-            books_borrowed: [...user.books_borrowed,isBook]
+            books_borrowed: allBorrowed
           }
         })
       }
 
-       await BookRepo.atomicUpdate({_id:id.id}, {
+       await BookRepo.atomicUpdate({_id:id}, {
         $set: {
           copies: isBook.copies - 1
         }

@@ -41,8 +41,8 @@ export function unseal(token: string, secret: string, next: NextFunction): Promi
 }
 
 export async function secure(req: Request, res: Response, next: NextFunction) {
-  if (!req.headers.authorization) {
-    next(new UnAuthorisedError("Unauthorised"))
+  if (!req?.headers.authorization) {
+    next(new UnAuthorisedError("Unauthorisedddddd"))
   }
   const claim = await unseal(req.headers.authorization, process.env.secret, next);
 

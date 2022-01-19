@@ -20,7 +20,7 @@ export class Controller<T> {
    * @param res Express response
    * @param result Success data
    */
-  async handleSuccess(req: Request, res: Response, result: T | string) {
+  async handleSuccess(req: Request, res: Response, result: any) {
     res.json({
       status: "success",
       data: result

@@ -62,16 +62,21 @@ export class BookController extends BaseController<ControllerResponse> {
     }
   }
 
-  @httpGet("/:id", secure)
+  @httpGet("/borrow", secure)
   async borrowBook(
     @request() req: Request,
     @response() res: Response,
-    @requestParam() id: any
+    @requestParam() ids: any
   ) {
     try{
     //@ts-ignore
-    const book = await BookSer.borrowBook(req.user, id)
-    this.handleSuccess(req, res, book)
+    
+      await req.body.id.map((id: any)=>{
+        //@ts-ignore
+        const book =  BookSer.borrowBook(req.user, id)
+        this.handleSuccess(req, res, book)
+      })
+
     }
     catch(error){
       this.handleError(req, res, error)
