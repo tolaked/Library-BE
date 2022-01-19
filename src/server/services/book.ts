@@ -31,7 +31,7 @@ class BookService {
   }
 
   async borrowBook (user: User, id: string) {
-    console.log('IDSSSS',id)
+    console.log('USEEEERR',user)
       //@ts-ignore
     const borrowed = user.books_borrowed.find((book)=>book._id === id)
     if(borrowed){
@@ -42,12 +42,12 @@ class BookService {
     }
    
 //@ts-ignore
-    const isBook = await BookRepo.byID({_id: id})
-    const allBorrowed = [...user.books_borrowed,isBook]
+    const bookToBorrow = await BookRepo.byID({_id: id})
+    const allBorrowed = [...user.books_borrowed,bookToBorrow]
     
-    if (isBook.copies >= 1) {
+    if (bookToBorrow.copies >= 1) {
       //@ts-ignore
-      if (isBook) {
+      if (bookToBorrow) {
         await UserRepo.atomicUpdate(user.id, {
           $set: {
             books_borrowed: allBorrowed
@@ -57,10 +57,10 @@ class BookService {
 
        await BookRepo.atomicUpdate({_id:id}, {
         $set: {
-          copies: isBook.copies - 1
+          copies: bookToBorrow.copies - 1
         }
       })
-      return isBook
+      return bookToBorrow
     }
     else{
       return 'Book not available'
