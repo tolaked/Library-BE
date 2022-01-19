@@ -31,10 +31,10 @@ export function seal(data: any, secret: string, ttl: number | string, req: Reque
  * @param token This is a valid JWT that is to be decoded
  * @param secret Non-random secret key to be used for encrypting and decrypting the token
  */
-export function unseal(token: string, secret: string): Promise<any> {
+export function unseal(token: string, secret: string, next: NextFunction): Promise<any> {
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, (err, val) => {
-      if (err) return reject(err);
+      if (err) next(new UnAuthorisedError("Unauthorised"));
       resolve(val["claim"]);
     });
   });
@@ -42,14 +42,14 @@ export function unseal(token: string, secret: string): Promise<any> {
 
 export async function secure(req: Request, res: Response, next: NextFunction) {
   if (!req.headers.authorization) {
-    throw new UnAuthorisedError("Unauthorised");
+    next(new UnAuthorisedError("Unauthorised"))
   }
-  const claim = await unseal(req.headers.authorization, process.env.secret);
+  const claim = await unseal(req.headers.authorization, process.env.secret, next);
 
   const user = await UserRepo.byID(claim.id);
 
   if (!user) {
-    throw new ForbiddenError("Invalid Token");
+    next(new ForbiddenError("Invalid Token"));
   }
 
   req["user"] = claim

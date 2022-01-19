@@ -7,7 +7,6 @@ dotenv.config()
 
 class BookService {
   async addBook (book: BookDTO) {
-    console.log("I am called")
     return await BookRepo.create({
       title: book.title,
       img_url: book.img_url,
@@ -16,7 +15,8 @@ class BookService {
   }
 
   async removeBook (id: string) {
-    const book = await BookRepo.byID(id)
+    //@ts-ignore
+    const book = await BookRepo.byID({_id:id})
 
     if (book.copies !== 0) {
       return await BookRepo.atomicUpdate(id, {
@@ -32,14 +32,16 @@ class BookService {
       throw new ConstraintError('You can not borrow more than two books')
     }
 
-    const isBook = await BookRepo.byID(id)
-
+//@ts-ignore
+    const isBook = await BookRepo.byID({_id: id.id})
+    
     if (isBook.copies >= 1) {
-      const book = await this.removeBook(id)
-      if (book) {
+      //@ts-ignore
+      const book = await this.removeBook(id.id)
+      if (isBook) {
         await UserRepo.atomicUpdate(user.id, {
           $set: {
-            books_borrowed: user.books_borrowed.push(book)
+            books_borrowed: [...user.books_borrowed,isBook]
           }
         })
       }
@@ -47,10 +49,10 @@ class BookService {
     return isBook;
   }
 
-  async returnBook (user: User, id: string) {
+  async returnBook (user: User, id: any) {
     //@ts-ignore
     const bookToReturn: BookDTO = user.books_borrowed.find(
-      (book: Book) => book.id === id
+      (book: Book) => book.id === id.id
     )
 
     // remove the returned book from the books user borrowed
@@ -60,8 +62,8 @@ class BookService {
     await UserRepo.atomicUpdate(user.id, {
       books_borrowed
     })
-
-    const book = await BookRepo.byID(id)
+//@ts-ignore
+    const book = await BookRepo.byID({_id:id.id})
 
     return await BookRepo.atomicUpdate(id, {
       $set: {

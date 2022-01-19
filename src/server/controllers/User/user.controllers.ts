@@ -10,9 +10,10 @@ import {
   import { BaseController } from "@app/data/util";
   import { validate } from "@app/data/util"
   import { isUser } from "./user.validator";
-  import { UserSer } from "@app/services/user";
+  import { UserSer } from "@app/server/services/user";
   
-  type ControllerResponse = User | User[] | string;
+
+  type ControllerResponse = User | User[] | string | any;
   
   @controller("/user")
   export class UserTaskController extends BaseController<ControllerResponse> {

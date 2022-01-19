@@ -24,7 +24,9 @@ class UserService {
         throw new Error("Email or Password is incorrect")
       }
 
-      return await seal(user, process.env.secret, "24h", req)
+      const token = await seal(user, process.env.secret, "24h", req)
+      //@ts-ignore
+      return {token,user}
     }
   }
 }
