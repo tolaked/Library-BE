@@ -64,12 +64,18 @@ class BookService {
     })
 //@ts-ignore
     const book = await BookRepo.byID({_id:id.id})
-
+    if(book){
     return await BookRepo.atomicUpdate(id, {
       $set: {
         copies: book.copies + 1
       }
     })
+  }
+  return await this.addBook({
+    title: bookToReturn.title,
+    img_url: bookToReturn.img_url,
+    copies: bookToReturn.copies
+  })
   }
 }
 

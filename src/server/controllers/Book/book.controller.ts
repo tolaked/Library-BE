@@ -52,9 +52,14 @@ export class BookController extends BaseController<ControllerResponse> {
     @response() res: Response,
     @requestParam() id: string
   ) {
+    try{
     //@ts-ignore
     const book = await BookSer.returnBook(req.user, id)
     this.handleSuccess(req, res, book)
+    }
+    catch(error){
+      this.handleError(req, res, error)
+    }
   }
 
   @httpGet("/:id", secure)
@@ -63,8 +68,13 @@ export class BookController extends BaseController<ControllerResponse> {
     @response() res: Response,
     @requestParam() id: string
   ) {
+    try{
     //@ts-ignore
     const book = await BookSer.borrowBook(req.user, id)
     this.handleSuccess(req, res, book)
+    }
+    catch(error){
+      this.handleError(req, res, error)
+    }
   }
 }

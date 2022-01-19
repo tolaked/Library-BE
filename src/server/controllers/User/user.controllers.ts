@@ -23,8 +23,13 @@ import {
       @response() res: Response,
       @requestBody() body: UserDTO
     ) {
+      try{
       const user = await UserSer.createUser(body);
       this.handleSuccess(req, res, user);
+      }
+      catch(error){
+        this.handleError(req, res, error)
+      }
     }
   
     @httpPost("/login", validate(isUser))
@@ -33,8 +38,13 @@ import {
       @response() res: Response,
       @requestBody() body: UserDTO
     ){
+      try{
       const claim = await UserSer.loginUser(body.email_address, body.password, req);
       this.handleSuccess(req, res, claim)
+      }
+      catch(error){
+        this.handleError(req, res, error)
+      }
     }
   }
   
