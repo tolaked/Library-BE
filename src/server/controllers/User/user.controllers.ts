@@ -13,7 +13,7 @@ import {
   import { UserSer } from "@app/server/services/user";
   
 
-  type ControllerResponse = User | User[] | string | any;
+  type ControllerResponse = User | User[] | string | object;
   
   @controller("/user")
   export class UserTaskController extends BaseController<ControllerResponse> {

@@ -66,7 +66,7 @@ export class BookController extends BaseController<ControllerResponse> {
   async borrowBook(
     @request() req: Request,
     @response() res: Response,
-    @requestParam() id: string
+    @requestParam() id: any
   ) {
     try{
     //@ts-ignore
