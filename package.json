@@ -9,7 +9,7 @@
     "start": "node ./dist",
     "start:dev": "nodemon ./dist",
     "watch": "tsc --watch -p ./tsconfig.json",
-    "build": "tsc --build ./tsconfig.json",
+    "build": "tsc -p ./tsconfig.json",
     "test": "jest --runInBand --detectOpenHandles --forceExit --passWithNoTests",
     "heroku-postbuild": "npm run build"
   },
