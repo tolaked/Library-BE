@@ -42,7 +42,8 @@
     "serve": "^13.0.2",
     "trim-request-body": "^1.0.1",
     "ts-mongoose": "^0.0.21",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.16",
@@ -64,8 +65,7 @@
     "@types/uuid": "^3.4.4",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
-    "ts-jest": "^26.3.0",
-    "typescript": "^4.0.2"
+    "ts-jest": "^26.3.0"
   },
   "_moduleAliases": {
     "@app": "./dist"
