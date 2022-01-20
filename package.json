@@ -69,5 +69,8 @@
   },
   "_moduleAliases": {
     "@app": "./dist"
-  }
+  },
+  "engines": {
+    "node": "12.20.0"
+}
 }
