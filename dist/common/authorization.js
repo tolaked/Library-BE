@@ -47,7 +47,7 @@ function unseal(token, secret, next) {
 exports.unseal = unseal;
 async function secure(req, res, next) {
     if (!(req === null || req === void 0 ? void 0 : req.headers.authorization)) {
-        next(new util_1.UnAuthorisedError("Unauthorisedddddd"));
+        next(new util_1.UnAuthorisedError("Unauthorised"));
     }
     const claim = await unseal(req.headers.authorization, process.env.secret, next);
     const user = await user_1.UserRepo.byID(claim.id);

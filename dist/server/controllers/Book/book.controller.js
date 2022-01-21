@@ -49,16 +49,14 @@ let BookController = class BookController extends util_1.BaseController {
             this.handleError(req, res, error);
         }
     }
-    async borrowBook(req, res, ids) {
+    async borrowBook(req, res, id) {
         try {
             //@ts-ignore
-            await req.body.id.map((id) => {
-                //@ts-ignore
-                const book = book_2.BookSer.borrowBook(req.user, id);
-                this.handleSuccess(req, res, book);
-            });
+            const books = await book_2.BookSer.borrowBook(req.user, id);
+            this.handleSuccess(req, res, books);
         }
         catch (error) {
+            console.log("HEADERRR", req.headers);
             this.handleError(req, res, error);
         }
     }
@@ -90,12 +88,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BookController.prototype, "returnBook", null);
 __decorate([
-    inversify_express_utils_1.httpGet("/borrow", authorization_1.secure),
+    inversify_express_utils_1.httpGet("/:id", authorization_1.secure),
     __param(0, inversify_express_utils_1.request()),
     __param(1, inversify_express_utils_1.response()),
     __param(2, inversify_express_utils_1.requestParam()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, String]),
     __metadata("design:returntype", Promise)
 ], BookController.prototype, "borrowBook", null);
 BookController = __decorate([

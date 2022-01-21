@@ -30,43 +30,30 @@ class BookService {
     }
   }
 
-  async borrowBook (user: User, id: string) {
-    console.log('USEEEERR',user)
-      //@ts-ignore
-    const borrowed = user.books_borrowed.find((book)=>book._id === id)
-    if(borrowed){
-      throw new ConstraintError('You cannot borrow more than a copy')
-    }
+  async borrowBook (user: User, id: ID){
     if (user.books_borrowed.length >= 2) {
       throw new ConstraintError('You can not borrow more than two books')
     }
-   
-//@ts-ignore
-    const bookToBorrow = await BookRepo.byID({_id: id})
+
+    const bookToBorrow = await BookRepo.byID(id.id)
     const allBorrowed = [...user.books_borrowed,bookToBorrow]
-    
-    if (bookToBorrow.copies >= 1) {
-      //@ts-ignore
-      if (bookToBorrow) {
-        await UserRepo.atomicUpdate(user.id, {
+
+      if (bookToBorrow.copies >= 1) {
+        //@ts-ignore
+          await UserRepo.atomicUpdate(user.id, {
+            $set: {
+              books_borrowed: allBorrowed
+            }
+          })
+  
+         await BookRepo.atomicUpdate({_id:id.id}, {
           $set: {
-            books_borrowed: allBorrowed
+            copies: bookToBorrow.copies - 1
           }
         })
-      }
-
-       await BookRepo.atomicUpdate({_id:id}, {
-        $set: {
-          copies: bookToBorrow.copies - 1
-        }
-      })
-      return bookToBorrow
+        return bookToBorrow
     }
-    else{
-      return 'Book not available'
-    }
-  
-    
+    return bookToBorrow;
   }
 
   async returnBook (user: User, id: ID) {

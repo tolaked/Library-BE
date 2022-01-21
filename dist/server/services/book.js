@@ -29,37 +29,26 @@ class BookService {
         }
     }
     async borrowBook(user, id) {
-        console.log('USEEEERR', user);
-        //@ts-ignore
-        const borrowed = user.books_borrowed.find((book) => book._id === id);
-        if (borrowed) {
-            throw new util_1.ConstraintError('You cannot borrow more than a copy');
-        }
         if (user.books_borrowed.length >= 2) {
             throw new util_1.ConstraintError('You can not borrow more than two books');
         }
-        //@ts-ignore
-        const bookToBorrow = await book_1.BookRepo.byID({ _id: id });
+        const bookToBorrow = await book_1.BookRepo.byID(id.id);
         const allBorrowed = [...user.books_borrowed, bookToBorrow];
         if (bookToBorrow.copies >= 1) {
             //@ts-ignore
-            if (bookToBorrow) {
-                await user_1.UserRepo.atomicUpdate(user.id, {
-                    $set: {
-                        books_borrowed: allBorrowed
-                    }
-                });
-            }
-            await book_1.BookRepo.atomicUpdate({ _id: id }, {
+            await user_1.UserRepo.atomicUpdate(user.id, {
+                $set: {
+                    books_borrowed: allBorrowed
+                }
+            });
+            await book_1.BookRepo.atomicUpdate({ _id: id.id }, {
                 $set: {
                     copies: bookToBorrow.copies - 1
                 }
             });
             return bookToBorrow;
         }
-        else {
-            return 'Book not available';
-        }
+        return bookToBorrow;
     }
     async returnBook(user, id) {
         //@ts-ignore
